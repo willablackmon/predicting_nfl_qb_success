@@ -2,11 +2,13 @@
 
 Predicting the success of NFL Quarterbacks, with emphasis on college performance, pre-draft rankings, and team investment in money and draft capital.
 
-### Data
+### Data Sources:
 
-nfl_merged.ipynb / nfl_merged.csv includes data from ..\Data_Artifacts\pro_ref_individ.csv and \Data_Artifacts\nfl_career_statistics.csv;
+* Historical Draft Data: all QBs ever drafted.
+* Take that list of QBs and fetch the QB data for all of them from pro-football-reference (ran that last night).  The search for the proper QB name is done much more thoroughly, double checking the name of the Quarterback fully before pulling data.
+* Take that DataFrame, pull the list of QBs with valid data (over 600) and lookup their college stats at [sports-reference.com/cfb](http://sports-reference.com/cfb)  .
 
-created \Data_Artifacts_csv_inspector.ipynb for use in comparing and combining similar columns'
+
 
 ##### Target/y Data
 
