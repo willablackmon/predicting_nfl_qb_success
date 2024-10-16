@@ -8,7 +8,10 @@ Predicting the success of NFL Quarterbacks, with emphasis on college performance
 * Take that list of QBs and fetch the QB data for all of them from pro-football-reference (ran that last night).  The search for the proper QB name is done much more thoroughly, double checking the name of the Quarterback fully before pulling data.
 * Take that DataFrame, pull the list of QBs with valid data (over 600) and lookup their college stats at [sports-reference.com/cfb](http://sports-reference.com/cfb)  .
 
+https://www.sports-reference.com/bot-traffic.html
 
+* FBref and Stathead sites more often than ten requests in a minute.
+* our other sites more often than twenty requests in a minute.
 
 ##### Target/y Data
 
