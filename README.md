@@ -13,6 +13,12 @@ https://www.sports-reference.com/bot-traffic.html
 * FBref and Stathead sites more often than ten requests in a minute.
 * our other sites more often than twenty requests in a minute.
 
+##### Data File Organization
+
+* sourcing_notebooks are the ipynb files that are used to source data
+* sourcing_artifacts are the results of the ipynb files in sourcing_notebooks
+* data_cleaning_notebooks are the ipynb files used to take any files and clean them.. resulting cleaned files will be placed in data_cleaning_artifacts
+
 ##### Target/y Data
 
 The ultimate goal will be to determine which of those target/y are indicative of overall quarterback success (or can be investigated on their own) using the feature/X data from college football data.
