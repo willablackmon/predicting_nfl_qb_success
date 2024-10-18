@@ -42,6 +42,34 @@ To gather X features, we will gather the following data for college Quarterback 
 
 **Source**:
 
+
+### Modeling Process
+
+#### I. Data Preparation
+
+1. Investigate Data
+2. Handle NA Values: SimpleImputer() to fill or remove NA values.
+3. Compute Correlation Matrix ()  (before scaling to keep original values intact for more accurate correlation matrix).
+4. Standard Scaling (ensure your features are on the same scale): StandardScaler()
+
+#### II. Train-Test Split (prepare data for model training and evaluation).
+
+#### III. Modeling
+
+1. Model (create model)
+2. Fit (train modell)
+3. Evaluate Training Model fit (accuracy_score/score on training data)
+4. Predict (accuracy_score/score)
+5. Evaluate Model (accuracy_score/score on y test data (actual data)  vs. predictions)
+
+#### IV. Optimization / Hyperparameter Tuning
+
+1. Grid Search
+
+#### V. Re-Model / Evaluate with Optimized Params/Methods/Hyperparameters
+
+
+
 ### Other Studies
 
 1. Excellent culling of NFL prospect data by Jack Lich, with highly clean datasets and feature descriptions available on both Kaggle [https://www.kaggle.com/datasets/jacklichtenstein/espn-nfl-draft-prospect-data](https://www.kaggle.com/datasets/jacklichtenstein/espn-nfl-draft-prospect-data) and github [https://github.com/jacklich10/nfl-draft-data](https://github.com/jacklich10/nfl-draft-data)
