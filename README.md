@@ -8,9 +8,7 @@ https://www.sports-reference.com/bot-traffic.html
 
 The ultimate goal will be to determine which of those target/y are indicative of overall quarterback success (or can be investigated on their own) using the feature/X data from college football data.
 
-
 classification problem since you're trying to categorize players as either successful (1) or not successful (0).
-
 
 Target/y columns:
 
@@ -85,6 +83,7 @@ Additional practices for future modeling:
 
 * **Encoding Categorical Variables:**  explore categorical variables, requiring encoding (one-hot encoding, ordinal encoding).
 
+
 ### Modeling Process
 
 ###### I. Data Inspection, Cleaning
@@ -128,9 +127,7 @@ The **target variable,** a 'success' value determined by applying numerical thre
 
 ![1729297728611](image/1729297728611.png)
 
-
 ![1729298177810](image/1729298177810.png)
-
 
 ###### V. Optimization / Hyperparameter Tuning
 
@@ -138,10 +135,7 @@ The **target variable,** a 'success' value determined by applying numerical thre
 
 ###### VI. Re-Model / Evaluate with Optimized Params/Methods/Hyperparameters
 
-
-
 **Cross (K-Folds) Validation**
-
 
 ### Appendix A: Model Consideration and Selection
 
@@ -186,7 +180,6 @@ The following models were considered for the modeling and prediction of this dat
 
 * Designed for sequential data, such as time series or natural language; likely not appropriate for player statistics.
 * **Pros:** Captures temporal dependencies. Effective for time-series prediction. **Cons:** Vanishing gradient problems. **Best for:** Time-series data, sequential data.
-
 
 ### Other Studies
 
