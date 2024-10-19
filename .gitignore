@@ -2,7 +2,9 @@
 
 # NOT USED or removed files
 /_sandbox
-/_NOTUSED
+/_NOT_USED
+/modeling_samples
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
