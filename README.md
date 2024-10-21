@@ -47,8 +47,6 @@ To gather X features, we will gather the following data for college Quarterback 
 * **modeling_notebooks:** used to take combined and pre-processed data and apply modeling for the purpose of analysis and prediction
 * **final_artifacts:** final files showing results of studies.
 
-  ![1729265544354](image/1729265544354.png)
-
 ### Model Selection
 
 Given the nature of the task - predicting success metrics - the focus will be on models that handle classification problems.
@@ -82,7 +80,6 @@ Models:
 Additional practices for future modeling:
 
 * **Encoding Categorical Variables:**  explore categorical variables, requiring encoding (one-hot encoding, ordinal encoding).
-
 
 ### Modeling Process
 
