@@ -1,4 +1,6 @@
-### Study
+# Predicting the Success of NFL Quarterbacks
+
+### I. Summary
 
 Predicting the success of NFL Quarterbacks, with emphasis on college performance, pre-draft rankings, and team investment in money and draft capital.
 
@@ -17,13 +19,15 @@ Predicting the success of NFL Quarterbacks, with emphasis on college performance
 
 * **nfl_success** : Aggregate NFL success, based on a combination of the above success targets.  Eg. `nfl_agg_succ = 1` for any player with 1 in at least 2 or more of the other columns (e.g., both `stat_succ =1` and `wins_succ = 1`).
 
-### Data Sources:
+---
+
+### II. Data Sources
 
 * [drafthistory.com](https://www.drafthistory.com)
 * [Pro Football Reference](https://www.pro-football-reference.com)
 * [Sports-Reference.com]()
 
-### y Target Data (NFL Career Statistics, Achievements)
+##### A.  y Target Data (NFL Career Statistics, Achievements)
 
 Obtain raw data starting from a historical list of all QBs drafted into the NFL quarterbacks and use this base list to obtain more granular statistical data that can be used to determine the player's success in the NFL.
 
@@ -43,7 +47,7 @@ Obtain raw data starting from a historical list of all QBs drafted into the NFL 
 
 The different **Grouped Success Targets** will further be combined into a single, **Aggregate Overall 'NFL Success'** target.  The aggregate overall success metric, along with the grouped success metrics can be investigated using the feature/X data from college football data.
 
-### **X Feature Data (College Football Statistics)**
+##### B.  X Feature Data (College Football Statistics)
 
 For all quarterbacks where detailed NFL metrics were successfully obtained, the dataset was enhanced by scraping college football statistics from Pro-Football-Reference's sister site, [Sports-Reference.com]().  The college statistics provide the features we will investigate to help predict a player's success in the NFL.
 
@@ -60,7 +64,10 @@ For all quarterbacks where detailed NFL metrics were successfully obtained, the 
 
 **Output, Artifacts:**  The results are exported as CSV and PKL files, to create a comprehensive dataset for further analysis and modeling.
 
-### Data Cleaning and Organization
+
+---
+
+### III. Data Cleaning and Organization
 
 This section provides a comprehensive view of how data was cleaned and organized, ensuring that all processes involved in preparing the data for machine learning models are covered.  Goals were to prepare and clean the combined dataset by addressing missing data, handling duplicates, merging college and NFL datasets, and performing necessary transformations to ensure the data is ready for modeling.
 
@@ -84,16 +91,19 @@ This section provides a comprehensive view of how data was cleaned and organized
 * **Feature Engineering** : Additional features like player earnings and career longevity were calculated and added to the dataset, creating a richer set of attributes for modeling.
 * **Exporting Data** : Cleaned and merged datasets were exported as both CSV and PKL files, ensuring compatibility for further analysis and modeling tasks.
 
-### Merging and Success Metrics
 
-`merge_cfb_ref_pfb_ref.ipynb`:  
+---
+
+### IV. Merging Data and Success Metrics Determination
+
+`merge_cfb_ref_pfb_ref.ipynb`:
 
 * Applies specific rules to calculate the various success metrics with NFL data (designed to quantify a player's performance and career success in the NFL)
 * merges the professional football success metrics and cleaned college statistic datasets to create a comprehensive dataset for investigation and modeling the determination of the success of NFL quarterbacks.
 
 **Group Success Metrics** determination:
 
-* **`win_success `:** measure of players' wins and winning percentage in their career. Quarterback assigned `win_success = 1` with more than **50 career wins** or win percentage greater than **50%.**
+* **`win_success `:** measure of players' wins, career win percentage. Quarterback assigned `win_success = 1` with more than **50 career wins** or win percentage greater than **50%.**
 * **`stats_success` :** players who achieved significant statistical milestones in their NFL careers.  Quarterback assigned `stats_success = 1`  with **passing yards > 15,000,**, **touchdown passes > 50** , and **completion percentage >= 60%** .
 * **`metrics_success`** : quantify success based on advanced metrics, including weighted Approximate Value (AV) and passer rating.  Quarterback assigned `metrics_success = 1` with **weighted Approximate Value (wAV)** greater than 50 or **career passer rating** exceeding **65.**
 * **`longevity_success`** :  assess whether a quarterback had a long-lasting career.  Quarterback assigned `longevity_success = 1` if they played in the NFL for at least **4 years** and started at least **32 games** .
@@ -103,20 +113,12 @@ This section provides a comprehensive view of how data was cleaned and organized
 
 * **`nfl_success`** overall measure of a quarterback's success by combining the individual success metrics.  Quarterback is assigned `nfl_success = 1` if they meet the criteria (value = 1) for at least **2 or more of the individual success metrics** (`win_success`, `stats_success`, `metrics_success`, `longevity_success`, `superbowl_success`).
 
----
-
-### Ongoing Pursuit of Additional Success Metrics
-
-`pfb_ref_cleaning_kitchensink.ipynb` is currently being used to pursue additional success metrics for inclusion in the modeling, including:
-
-* **`hof_success`** : Hall of Fame induction.
-* **`draft_success`** : Draft success, based on whether a player was picked in the 1st round, mid rounds, or later rounds.
-* **`award_success`** : Award success, defined as having **3 or more total awards** (e.g., Pro Bowls, All-Pros, MVPs).
-* **`earn_success`** : Earnings success, defined as having  **career earnings > $5M** .
 
 ---
 
-### Model Selection
+### V. Modeling
+
+##### A.  Methodology
 
 Given the nature of the task - predicting success metrics - the focus will be on models that handle classification problems.
 
@@ -136,29 +138,15 @@ Practices utilized:
 
 Please See Appendix A, "Model Consideration and Selection" for a full list of the models reviewed, along with details of the characteristics.
 
-### Future Modeling Suggestions
+##### B.  Modeling Process
 
-For expansion on these studies, the following is recommended as a starting point for future models and techniques:
-
-Models:
-
-* **Support Vector Machine**
-* **LSTM (Long Short-Term Memory)**
-* **K-Nearest Neighbors (KNN)**
-
-Additional practices for future modeling:
-
-* **Encoding Categorical Variables:**  explore categorical variables, requiring encoding (one-hot encoding, ordinal encoding).
-
-### Modeling Process
-
-###### I. Data Inspection, Cleaning
+###### 1. Data Inspection, Cleaning
 
 * Inspect Data
 * Divide into X feature and y target DataFrames
 * Handle N/A, NaN Values: eg. fillna() or **SimpleImputer()** to fill or remove NA values.
 
-###### II. Exploratory Data Analysis (EDA)
+###### 2. Exploratory Data Analysis (EDA)
 
 The **target variable,** a 'success' value determined by applying numerical thresholds to statistics and metrics, as well as aggregating awards and honors (Pro-Bowl elections, Hall of Fame Indicutions), and career success (winning percentage, SuperBowl wins) were all of the nature of categorical classification.
 
@@ -177,12 +165,12 @@ The **target variable,** a 'success' value determined by applying numerical thre
 
   ![1729297822652](image/1729297822652.png)
 
-###### III. Data Preparation, Split and Scale
+###### 3. Data Preparation, Split and Scale
 
 * Train-Test Split (prepare data for model training and evaluation).
 * **Standard Scaling** (ensure your features are on the same scale): StandardScaler()
 
-###### IV. Modeling
+###### 4. Modeling
 
 * Model (create model)
 * Fit (train model)
@@ -195,13 +183,42 @@ The **target variable,** a 'success' value determined by applying numerical thre
 
 ![1729298177810](image/1729298177810.png)
 
-###### V. Optimization / Hyperparameter Tuning
+###### 5. Optimization / Hyperparameter Tuning
 
-1. Grid Search
+* **Grid Search**
 
-###### VI. Re-Model / Evaluate with Optimized Params/Methods/Hyperparameters
+###### 6. Re-Model / Evaluate with Optimized Params/Methods/Hyperparameters
 
-**Cross (K-Folds) Validation**
+* **Cross (K-Folds) Validation**
+
+
+---
+
+### VII. Future Updates to this Model:
+
+##### A.  Additional Success Metrics
+
+`pfb_ref_cleaning_kitchensink.ipynb` is currently being used to pursue additional success metrics for inclusion in the modeling, including:
+
+* **`hof_success`** : Hall of Fame induction.
+* **`draft_success`** : Draft success, based on whether a player was picked in the 1st round, mid rounds, or later rounds.
+* **`award_success`** : Award success, defined as having **3 or more total awards** (e.g., Pro Bowls, All-Pros, MVPs).
+* **`earn_success`** : Earnings success, defined as having  **career earnings > $5M.**
+
+##### B.  Additional Models, Data Techniques
+
+For expansion on these studies, the following is recommended as a starting point for future models:
+
+* **Support Vector Machine**
+* **LSTM (Long Short-Term Memory)**
+* **K-Nearest Neighbors (KNN)**
+
+Additional practices for future modeling:
+
+* **Encoding Categorical Variables:**  explore categorical variables, requiring encoding (one-hot encoding, ordinal encoding).
+
+
+---
 
 ### Appendix A: Model Consideration and Selection
 
@@ -247,7 +264,9 @@ The following models were considered for the modeling and prediction of this dat
 * Designed for sequential data, such as time series or natural language; likely not appropriate for player statistics.
 * **Pros:** Captures temporal dependencies. Effective for time-series prediction. **Cons:** Vanishing gradient problems. **Best for:** Time-series data, sequential data.
 
-### Other Studies
+---
+
+### Appendix B: Other Similar Studies
 
 1. Excellent culling of NFL prospect data by Jack Lich, with highly clean datasets and feature descriptions available on both Kaggle [https://www.kaggle.com/datasets/jacklichtenstein/espn-nfl-draft-prospect-data](https://www.kaggle.com/datasets/jacklichtenstein/espn-nfl-draft-prospect-data) and github [https://github.com/jacklich10/nfl-draft-data](https://github.com/jacklich10/nfl-draft-data)
 2. "Does Your NFL Team Draft to Win? New Research Reveals Rounds 3, 4, and 5 are the Key to Future On-Field Performance," Chandler Smith, [https://www.samford.edu/sports-analytics/fans/2024/Does-Your-NFL-Team-Draft-to-Win-New-Research-Reveals-Rounds-3-4-and-5-are-the-Key-to-Future-On-Field-Performance](https://www.samford.edu/sports-analytics/fans/2024/Does-Your-NFL-Team-Draft-to-Win-New-Research-Reveals-Rounds-3-4-and-5-are-the-Key-to-Future-On-Field-Performance)
