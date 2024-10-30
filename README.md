@@ -2,7 +2,7 @@
 
 *This project aims to predict the success of NFL quarterbacks based on college performance, pre-draft rankings, and NFL statistics. The main focus is on using college football statistics (X Features) to predict NFL career success (y Target), including metrics such as Hall of Fame induction, career longevity, and key statistical achievements.*
 
-**[Data Sourcing](#data-sourcing-summary)** | **[Data Cleaning](#data-cleaning-and-organization)** | **[Modeling](#modeling)** | **[Results](#results)** | **[Future Work](#future-updates-to-this-model)**
+**[Data Sourcing](#data-sourcing-summary)** | **[Data Cleaning](#data-cleaning-and-organization)** | **[Modeling](#modeling)** | **[Results](#results)** |  **[Future Updates](#future-updates-to-this-model)**
 
 ---
 
@@ -202,29 +202,88 @@ The target variable is a 'success' metric, determined by applying thresholds to 
 
 ---
 
+## Results
+
+The project is ongoing, and I hope to continue to improve the dataset and start to gather non-trivial results.  The most difficult challenge is finding readily available data that will be available across the entire list of quarterbacks.  File  `pfb_ref_cleaning_kitchensink.ipynb` is included in the project and is my working file for adding more data.
+
+However, here are some preliminary findings:
+
+**1. Top 10 Feature Importances** of the College Statistics that are predictive of NFL Success:
+
+1. Player's overall pick in the NFL draft
+2. Draft round (should remove this or Overall pick as redundant)
+3. Weight
+4. College Passer Rating
+5. Average Yards per Attempt
+6. Interception %
+7. Yards/Completion
+8. Completion %
+9. Passing yards/Game
+10. College Games played
+
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729297671032.png" height="400"
+         alt="1729297671032.png">
+</figure>
+
+
+2. The **Classification Report** for the Deep Neural Network `(models_DNN.ipynb)`model shows the following:
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1730328803025.png" height="180"
+         alt="1730328803025.png">
+</figure>
+
+**Predicting Non-Successful/Class-0 Quarterbacks:**
+
+- **Precision:** 79% of the instances predicted as **Non-Successful/Class-0** are actually **Non-Successful/Class-0**
+- **Recall:** the model correctly identifies 80% of all actual **Non-Successful/Class-0** instances. The model does a good job of capturing the majority of **Non-Successful/Class-**0 examples.
+- **F1 Score**: 0.80: The F1 score is a good balance between precision and recall, indicating a solid performance for **Non-Successful/Class-0**
+- **Support:** 76 instances of **Non-Successful/Class-0** in the test set.
+
+**Predicting Successful/Class-1 Quarterbacks:**
+
+- **Precision:** only 52% of the instances predicted as **Successful/Class-1** are actually **Successful/Class-1**.  There are quite a few false positives, indicating that the model struggles with predicting **Successful/Class-1** quarterbacks.
+- **Recall:** model identifies only 50% of the actual **Successful/Class-1** instances; it misses half of the positive cases, indicating a significant issue with **Successful/Class-1** identification.
+- **F1 Score:** 0.51: F1 score is quite low, reflecting the struggles in both precision and recall for **Successful/Class-1**
+- **Support:** 32 instances of **Successful/Class-1** in the test set.
+
+**Overall Metrics:**
+
+- **Accuracy**: Overall, the model **correctly predicts 71% of the instances** in the test set.
+- The model performs well for identifying quarterbacks who may not be successful in the NFL (**Non-Successful/Class-0)** but struggles significantly with determining those two should be successful (**Successful/Class-1)**
+- There is a class imbalance issue: (see "**Support**" variable), with fewer instances of **Successful/Class-1** (32 instances) compared to **Non-Successful/Class-0** (76 instances) in our test set (overall dataset.)
+
+---
+
 ## Future Updates to this Model:
 
-##### Additional Success Metrics to Add to y-target Data
+The largest improvement for this model would be additional data for both the determination of the Quarterback's NFL Success (y-data) and the college-statistic/pre-NFL X-Feature data.
 
-`pfb_ref_cleaning_kitchensink.ipynb` is currently being used to pursue additional success metrics for inclusion in the modeling, including:
+1. Add Additional Success Metrics to y-target Data data for the determination of NFL Success (y-target data) and consider the number of candidates that are deemed 'successful'.  I think the data currently does not include enough balance, with more 'successful' quarterbacks needing to be defined.  File  `pfb_ref_cleaning_kitchensink.ipynb` is currently being used to add these additional 'success' factors:
 
 * **`hof_success`** : Hall of Fame induction.
 * **`draft_success`** : Draft success, based on whether a player was picked in the 1st round, mid rounds, or later rounds.
 * **`award_success`** : Award success, defined as having **3 or more total awards** (e.g., Pro Bowls, All-Pros, MVPs).
 * **`earn_success`** : Earnings success, defined as having  **career earnings > $5M.**
 
-##### Additional College Statistics, College Awards, NFL Combine Statistics to X-Feature Data.
+2. I'd like to add more X feature data from the candidates pre-NFL time, possibly including additional College Statistics, College Awards, NFL Combine results
+3. Provide more college X-Feature data; include and encode **Categorical Variables**  in order to have more data.
+4. Apply different models and see if they can improve the predictive results: **K-Nearest Neighbors (KNN), Support Vector Machine**
+5. **Correlation Matrix / Heatmap**  show Completions, Attempts, Total Passing Yards and TDs are highly correlated (> 90%).  These features provide essentially redundant information.  The multicollinearity can negatively impact the model's interpretability and performance.
 
-##### Additional Models, Data Techniques
+   * One feature in each pair of highly correlated values **can be removed** to elimnate redundancy.  Tecniques such as **Recursive Feature Elimination (RFE) can be used to help select the best set of features.
+   * **Principal Component Analysis (PCA)** can be used to transform the correlated features into a smaller set of uncorrelated components, helping maintain the information while removing multicollinearity.
 
-For expansion on these studies, the following is recommended as a starting point for future models:
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1730328125133.png" height="400"
+         alt="1730328125133.png">
+</figure>
 
-* **K-Nearest Neighbors (KNN)**
-* **Support Vector Machine**
-
-Additional practices for future modeling:
-
-* **Encoding Categorical Variables:**  explore categorical variables, requiring encoding (one-hot encoding, ordinal encoding).
 
 ---
 
