@@ -1,202 +1,208 @@
+
 # Predicting the Success of NFL Quarterbacks
 
-### I. Summary
+*This project aims to predict the success of NFL quarterbacks based on college performance, pre-draft rankings, and NFL statistics. The main focus is on using college football statistics (X Features) to predict NFL career success (y Target), including metrics such as Hall of Fame induction, career longevity, and key statistical achievements.*
 
-Predicting the success of NFL Quarterbacks, with emphasis on college performance, pre-draft rankings, and team investment in money and draft capital.
-
-**X Feature Data** from college football will be used as predictive variables (inputs), while the **y Target Data** serves as the outcome to predict NFL success (as defined by the various success targets grouped and combined into aggregate measures.
-
-**Grouped Success** targets (binary (1, 0):
-
-* **hof_success** : Hall of Fame induction.
-* **wins_success** : Winning success (e.g., win % > 50%, 1 or more Super Bowl wins).
-* **award_success** : Awards success (e.g., more than 1 Pro Bowl, more than 1 All-Pro selection).
-* **stat_success** : Statistical success (e.g., passing_yards > 15,000, touchdown_passes > 50).
-* **earn_success** : Earnings success (career earnings > $5M).
-* **long_success** : Longevity success (years_played > 5 years).
-
-**Aggregate Overall 'NFL Success'** target:
-
-* **nfl_success** : Aggregate NFL success, based on a combination of the above success targets.  Eg. `nfl_agg_succ = 1` for any player with 1 in at least 2 or more of the other columns (e.g., both `stat_succ =1` and `wins_succ = 1`).
+**[Data Sourcing](#data-sourcing-summary)** | **[Data Cleaning](#data-cleaning-and-organization)** | **[Modeling](#modeling)** | **[Results](#results)** | **[Future Work](#future-updates-to-this-model)**
 
 ---
 
-### II. Data Sources
+## Abstract
 
-* [drafthistory.com](https://www.drafthistory.com)
+This project develops machine learning models to predict NFL quarterback success based on college performance metrics. Using data scraped from sources like DraftHistory.com, Pro Football Reference, and Sports-Reference.com, the project combines college and NFL statistics to create a comprehensive dataset. Models such as Logistic Regression, Random Forest, and a basic Neural Network were trained to predict success metrics. Feature importance, cross-validation, and hyperparameter tuning were used to optimize model performance.
+
+
+
+## Core Technologies, Tools
+
+* **Languages/Tools** : Python, Jupyter Notebook
+* **Libraries** : `requests`, `BeautifulSoup`, `pandas`, `scikit-learn`, `seaborn`, `matplotlib`, `pickle`
+* **Data Handling** : Imputation with `SimpleImputer()`, correlation analysis, de-duplication, feature scaling with `StandardScaler`
+* **Machine Learning Models** : Logistic Regression, Random Forest Classifier, Deep Neural Network (Keras/TensorFlow)
+* **Techniques** : Feature importance, hyperparameter tuning with `GridSearchCV`, K-Fold cross-validation (`cross_val_score` with `KerasClassifier`)
+* **Data Export** : Cleaned and merged datasets exported as CSV and PKL files for further analysis
+
+
+
+
+
+
+## Data Sourcing Summary
+
+**Data Sources:**
+
+* [DraftHistory.com](https://www.drafthistory.com)
 * [Pro Football Reference](https://www.pro-football-reference.com)
 * [Sports-Reference.com]()
 
-##### A.  y Target Data (NFL Career Statistics, Achievements)
+---
 
-Obtain raw data starting from a historical list of all QBs drafted into the NFL quarterbacks and use this base list to obtain more granular statistical data that can be used to determine the player's success in the NFL.
+#### y Target Data (NFL Career Statistics, Achievements)
 
-* `draft_history.ipynb`, scrapes quarterback draft history data from [drafthistory.com](https://www.drafthistory.com). This file provides a comprehensive list of all NFL quarterbacks drafted since the league's inception.
-* `pfb_ref_sourcing.ipynb` takes `draft_history` data and dynamically builds URLs that point to quarterback's profiles on Pro Football Reference (PFR).
-* granular statistics for each quarterback are obtained, passing yards, completion rates, touchdowns, win percentage, and other relevant performance metrics.
-* sourced data (both successful retrievals and failures) into CSV and PKL files for further analysis and modeling.
-* `hof_monitor.ipynb` further enhances data from [Pro Football Reference](https://www.pro-football-reference.com) by pulling Pro Football Hall of Fame monitor metrics, adding additional layers of insight by providing milestone achievements (e.g., Pro Bowls, All-Pro selections, AV, etc.).
+The y target data focuses on NFL career statistics and achievements for quarterbacks, with the goal of defining NFL "success" through various grouped metrics.
 
- **Libraries Used**:
+* **`draft_history.ipynb`** : Scrapes quarterback draft history data from [DraftHistory.com](https://www.drafthistory.com). This dataset includes all quarterbacks drafted into the NFL, serving as the foundation for gathering additional NFL performance metrics.
+* **`pfb_ref_sourcing.ipynb`** : Builds on the `draft_history` data by generating dynamic URLs that point to quarterback profiles on [Pro Football Reference](https://www.pro-football-reference.com). It retrieves granular performance statistics for each quarterback, including passing yards, completion rates, touchdowns, win percentage, and other relevant metrics.
+* **`hof_monitor.ipynb`** : Enhances the dataset by pulling Pro Football Hall of Fame monitor metrics from [Pro Football Reference](https://www.pro-football-reference.com), adding insights such as milestone achievements (Pro Bowls, All-Pro selections, Approximate Value [AV], etc.).
 
-* `requests` for sending HTTP requests to the target website.
-* `BeautifulSoup` (from `bs4`) for parsing and navigating the HTML content.
-* `pandas` for organizing and manipulating the scraped data.
+The target or **y data** fields are grouped into different success metrics to help define quarterback "success" in the NFL:
 
-**Output, Artifacts:**  The ultimate goal will be to set definitions of 'success' in the NFL.  Different Target/y Data fields will be grouped to help determine which are most indicative of overall quarterback success.
+#### NFL Success Metrics Determination
 
-The different **Grouped Success Targets** will further be combined into a single, **Aggregate Overall 'NFL Success'** target.  The aggregate overall success metric, along with the grouped success metrics can be investigated using the feature/X data from college football data.
+Various success metrics are calculated using NFL performance data, which helps quantify different aspects of a quarterback’s professional career success. Each metric targets a specific aspect of performance, longevity, and achievements:
 
-##### B.  X Feature Data (College Football Statistics)
+* **`win_success`** : `win_success = 1` with more than **50 career wins** or a  **win percentage greater than 50%** in the NFL.
+* **`stats_success`** : Focuses on significant statistical achievements throughout the player's NFL career.  Quarterback is assigned `stats_success = 1` if they exceed  **15,000 passing yards** ,  **50 touchdown passes** , and have a **completion percentage of 60% or more** .
+* **`metrics_success`** : Quantifies success using advanced performance metrics, including Approximate Value (AV) and passer rating.  Quarterback is assigned `metrics_success = 1` if they have a **weighted Approximate Value (wAV) greater than 50** or a  **career passer rating exceeding 65** .
+* **`longevity_success`** : Assesses the length of the quarterbacks career.  Quarterback is assigned `longevity_success = 1` with **at least 4 years** and at least **32 games** started in the NFL.
+* **`superbowl_success`** : Quarterback is assigned `superbowl_success = 1` if they have  **at least one Super Bowl win** .
 
-For all quarterbacks where detailed NFL metrics were successfully obtained, the dataset was enhanced by scraping college football statistics from Pro-Football-Reference's sister site, [Sports-Reference.com]().  The college statistics provide the features we will investigate to help predict a player's success in the NFL.
+The overall measure of a quarterback’s success is determined by combining the individual success metrics into an aggregate target, `nfl_success`:
 
-* `cfb_ref_sourcing.ipynb` takes the list of quarterbacks for whom NFL data was sourced, and extracts college football data for each quarterback found, including:
-  * Passing statistics: Completion percentage, passing yards, touchdowns, interceptions, passer rating
-  * Game participation: Years played, games played, games started, wins, loses.
-  * Season-by-season breakdown: Individual performance data for each season at the college level.
+* **`nfl_success`** : A quarterback is assigned `nfl_success = 1` if they meet the criteria (value = 1) for **two or more of the individual success metrics** (`win_success`, `stats_success`, `metrics_success`, `longevity_success`, `superbowl_success`).
 
- **Libraries Used**:
-
-* `pandas` for reading and organizing college football data.
-* `requests` for sending HTTP requests to the Sports-Reference site.
-* `BeautifulSoup` (from `bs4`) for parsing the HTML content to find relevant data.
-
-**Output, Artifacts:**  The results are exported as CSV and PKL files, to create a comprehensive dataset for further analysis and modeling.
-
+This aggregate measure provides a holistic view of quarterback career success in the NFL.
 
 ---
 
-### III. Data Cleaning and Organization
+#### X Feature Data (College Football Statistics)
 
-This section provides a comprehensive view of how data was cleaned and organized, ensuring that all processes involved in preparing the data for machine learning models are covered.  Goals were to prepare and clean the combined dataset by addressing missing data, handling duplicates, merging college and NFL datasets, and performing necessary transformations to ensure the data is ready for modeling.
+The X feature data is composed of quarterback college statistics, which will be used to train a machine learning model to predict NFL success based on college performance.
 
-* `pfb_ref_cleaning.ipynb` Clean and organize NFL statistics data from Pro-Football-Reference.com to generate Y target data for use in determining Group Success metrics.
+* **`cfb_ref_sourcing.ipynb`** : Extracts college football data for the quarterbacks identified in the NFL dataset, scraping from [Sports-Reference.com](). Key features gathered include:
+* **Passing Statistics** : Completion percentage, passing yards, touchdowns, interceptions, passer rating.
+* **Game Participation** : Years played, games played, games started, wins, and losses.
+* **Season-by-Season Breakdown** : Detailed individual performance data for each college season.
 
-  * **Columns** : `['name', 'hall_of_fame', 'college', 'weighted_career_av', 'approximate_value', 'pass_rating', 'draft_year', 'retire_year', 'years', 'games_played', 'games_started', 'qb_rec', 'pass_yds', 'pass_yds_per_g', 'pass_td', 'pass_td_pct', 'pass_int', 'pass_int_pct', 'pass_att', 'pass_cmp', 'pass_cmp_pct', 'pass_yds_per_att', 'pass_adj_yds_per_att', 'pass_net_yds_per_att', 'pass_adj_net_yds_per_att', 'pass_yds_per_cmp', 'draft_round', 'draft_pick', 'all_star', 'superbowls', 'comebacks', 'gwd', 'height', 'weight', 'wins', 'losses', 'ties', 'height_in']`
-* `cfb_ref_cleaning.ipynb` Clean and organize college football data sourced from Sports-Reference.com, for use in generating X feature data, including all columns available for modeling.
-
-  * **Columns** : `['player', 'G', 'Cmp', 'Att', 'Cmp%', 'Yds', 'TD', 'TD%', 'Int', 'Int%', 'Y/A', 'AY/A', 'Y/C', 'Y/G', 'Rate', 'blank', 'awards', 'school', 'draft', 'pro_stats', 'draft_rd', 'draft_overall', 'draft_yr', 'draft_team']`
-
- **Libraries Used** :
-
-* `pandas` for data manipulation, cleaning, and merging.
-* `pickle` for loading and saving intermediate data files.
-* Display settings adjusted for visibility of large datasets during the cleaning process.
-
- **Data Transformation Highlights** :
-
-* **Handling Missing Data** : NaN/null values were addressed either by filling in reasonable defaults or removing rows with excessive missing information.
-* **De-duplication** : Duplicate rows were identified and removed where necessary to ensure the accuracy of the merged dataset.
-* **Feature Engineering** : Additional features like player earnings and career longevity were calculated and added to the dataset, creating a richer set of attributes for modeling.
-* **Exporting Data** : Cleaned and merged datasets were exported as both CSV and PKL files, ensuring compatibility for further analysis and modeling tasks.
-
+**Output:**
+The scraped college statistics form a comprehensive dataset of quarterback college performance. This data will be used to develop predictive models and analyze which college-level factors contribute to NFL success.
 
 ---
 
-### IV. Merging Data and Success Metrics Determination
+## Data Cleaning and Organization
 
-`merge_cfb_ref_pfb_ref.ipynb`:
-
-* Applies specific rules to calculate the various success metrics with NFL data (designed to quantify a player's performance and career success in the NFL)
-* merges the professional football success metrics and cleaned college statistic datasets to create a comprehensive dataset for investigation and modeling the determination of the success of NFL quarterbacks.
-
-**Group Success Metrics** determination:
-
-* **`win_success `:** measure of players' wins, career win percentage. Quarterback assigned `win_success = 1` with more than **50 career wins** or win percentage greater than **50%.**
-* **`stats_success` :** players who achieved significant statistical milestones in their NFL careers.  Quarterback assigned `stats_success = 1`  with **passing yards > 15,000,**, **touchdown passes > 50** , and **completion percentage >= 60%** .
-* **`metrics_success`** : quantify success based on advanced metrics, including weighted Approximate Value (AV) and passer rating.  Quarterback assigned `metrics_success = 1` with **weighted Approximate Value (wAV)** greater than 50 or **career passer rating** exceeding **65.**
-* **`longevity_success`** :  assess whether a quarterback had a long-lasting career.  Quarterback assigned `longevity_success = 1` if they played in the NFL for at least **4 years** and started at least **32 games** .
-* **`superbowl_success`** identify quarterback won at least one Super Bowl  Quarterback assigned `superbowl_success = 1` with **at least 1 Super Bowl** win.
-
-**Aggregate Success determination:**
-
-* **`nfl_success`** overall measure of a quarterback's success by combining the individual success metrics.  Quarterback is assigned `nfl_success = 1` if they meet the criteria (value = 1) for at least **2 or more of the individual success metrics** (`win_success`, `stats_success`, `metrics_success`, `longevity_success`, `superbowl_success`).
-
+This section highlights the critical steps taken to prepare the data for machine learning, ensuring high-quality datasets for NFL quarterback success prediction models.  The primary goals were to clean the combined dataset by addressing missing data, handling duplicates, merging college and NFL datasets, and performing necessary transformations to ensure the data is ready for modeling.
 
 ---
 
-### V. Modeling
+#### **`pfb_ref_cleaning.ipynb`**
 
-##### A.  Methodology
+This notebook focuses on cleaning and organizing NFL statistics data sourced from [Pro-Football-Reference.com](https://www.pro-football-reference.com), which is used to **generate y target data** for determining the **Group Success Metrics** (see NFL Success Metrics Determination above) .
 
-Given the nature of the task - predicting success metrics - the focus will be on models that handle classification problems.
-
-First/baseline models were **Logistic Regression** and **Random Forest Classifier.**
-
-Also included was **Basic Neural Network (DNN)** Tensorflow/Keras model as there may be temporal dependencies in the data (value or state of one variable at a given time point influences the value or state of another variable at a future time point).
-
-Practices utilized:
-
-* **SimpleImputer()** in replacing missing or null/NA data.
-* **Correlation analysis:** compute correlation matrix to identify highly correlated features
-* **Feature Importance** (with Random Forest Model); calculate the feature importances and visualize with seaborn bar graph.
-* **Feature Scaling** with StandardScaler to standardize/normalize numerical features (esp. important in the case of Logistic Regression and KNeighborsClassifier)
-* **Visualizations** with seaborn, matplotlib
-* **Hyperparameter Tuning** with GridSearchCV
-* **K-Fold Cross-Validation** to assess performance of model across multiple subsets of the data; gives insights into how well model model generalizes.  Utilizes SciKeras **KerasClassifier** and Scikit-Learn **cross_val_score.**
-
-Please See Appendix A, "Model Consideration and Selection" for a full list of the models reviewed, along with details of the characteristics.
-
-##### B.  Modeling Process
-
-###### 1. Data Inspection, Cleaning
-
-* Inspect Data
-* Divide into X feature and y target DataFrames
-* Handle N/A, NaN Values: eg. fillna() or **SimpleImputer()** to fill or remove NA values.
-
-###### 2. Exploratory Data Analysis (EDA)
-
-The **target variable,** a 'success' value determined by applying numerical thresholds to statistics and metrics, as well as aggregating awards and honors (Pro-Bowl elections, Hall of Fame Indicutions), and career success (winning percentage, SuperBowl wins) were all of the nature of categorical classification.
-
-* **Check **feature distributions**: determine if transformations are needed (log transformation for skewed data, etc.)**
-* **Correlation analysis: compute correlation matrix** to identify highly correlated features, which can impact certain models; visualize with heat map.
-
-![1729297617264](image/1729297617264.png)
-
-* **Feature Importance** (with Random Forest Model); calculate the feature importances and visualize with seaborn bar graph.
-
-![1729297671032](image/1729297671032.png)
-
-* **Visualization** with seaborn, matlibplot.
-
-  ![1729297802604](image/1729297802604.png)
-
-  ![1729297822652](image/1729297822652.png)
-
-###### 3. Data Preparation, Split and Scale
-
-* Train-Test Split (prepare data for model training and evaluation).
-* **Standard Scaling** (ensure your features are on the same scale): StandardScaler()
-
-###### 4. Modeling
-
-* Model (create model)
-* Fit (train model)
-* Evaluate Training Model fit (accuracy_score/score on training data)
-* Predict (accuracy_score/score)
-* Evaluate Model (accuracy_score/score on y test data (actual data)  vs. predictions)
-* K-Fold Cross-Validation to assess performance of model across multiple subsets of the data (utlizes KerasClassifier and Scikit-Learn cross_val_score)
-
-![1729297728611](image/1729297728611.png)
-
-![1729298177810](image/1729298177810.png)
-
-###### 5. Optimization / Hyperparameter Tuning
-
-* **Grid Search**
-
-###### 6. Re-Model / Evaluate with Optimized Params/Methods/Hyperparameters
-
-* **Cross (K-Folds) Validation**
-
+**Columns** : `['name', 'hall_of_fame', 'college', 'weighted_career_av', 'approximate_value', 'pass_rating', 'draft_year', 'retire_year', 'years', 'games_played', 'games_started', 'qb_rec', 'pass_yds', 'pass_yds_per_g', 'pass_td', 'pass_td_pct', 'pass_int', 'pass_int_pct', 'pass_att', 'pass_cmp', 'pass_cmp_pct', 'pass_yds_per_att', 'pass_adj_yds_per_att', 'pass_net_yds_per_att', 'pass_adj_net_yds_per_att', 'pass_yds_per_cmp', 'draft_round', 'draft_pick', 'all_star', 'superbowls', 'comebacks', 'gwd', 'height', 'weight', 'wins', 'losses', 'ties', 'height_in']`
 
 ---
 
-### VII. Future Updates to this Model:
+#### **`cfb_ref_cleaning.ipynb`**
 
-##### A.  Additional Success Metrics
+This notebook handles the cleaning and organization of college football statistics data sourced from [Sports-Reference.com](https://www.sports-reference.com), used to **generate X feature data** for modeling. It focuses on quarterback college performance metrics.
+
+**Columns** : `['player', 'G', 'Cmp', 'Att', 'Cmp%', 'Yds', 'TD', 'TD%', 'Int', 'Int%', 'Y/A', 'AY/A', 'Y/C', 'Y/G', 'Rate', 'blank', 'awards', 'school', 'draft', 'pro_stats', 'draft_rd', 'draft_overall', 'draft_yr', 'draft_team']`
+
+NFL success.
+
+---
+
+## Modeling
+
+#### Methodology
+
+---
+
+The goal is to predict quarterback success metrics, which is a  **classification task** . The following models and techniques were employed to tackle this problem:
+
+**Baseline Models** :  **Logistic Regression, Random Forest Classifier**
+
+**Deep Learning Model** : **Basic Neural Network (DNN)** : A TensorFlow/Keras model was explored, considering the potential temporal dependencies in the data (i.e., where the state of one variable at a given time point could influence another variable at a future time point).
+
+*For more details on model considerations and characteristics, please refer to Appendix A: "Model Consideration and Selection."*
+
+---
+
+#### Process
+
+---
+
+##### **1. Data Inspection and Cleaning**
+
+* **Inspect the data** : Visualize and analyze for inconsistencies or missing values.
+* **Divide data** : Split into **X feature** (college stats) and **y target** (NFL success metrics) DataFrames.
+* **Handle N/A and NaN values** : Used `fillna()` or **SimpleImputer()** to handle missing values, either by filling or removing them as appropriate.
+
+##### **2. Exploratory Data Analysis (EDA)**
+
+The target variable is a 'success' metric, determined by applying thresholds to NFL statistics and achievements (Pro Bowl selections, Hall of Fame inductions, win percentage, Super Bowl wins), which is treated as categorical data for classification.
+
+**Check Feature Distributions** : Assessed the distributions of features and applied transformations (e.g., log transformations) where necessary for skewed data.
+
+**Correlation Analysis** : Computed a correlation matrix to identify highly correlated features, which can impact model performance. Results were visualized using a heat map.
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729297617264.png" height="500"
+         alt="1729297617264.png">
+</figure>
+
+**Feature Importance** : Calculated feature importance with the Random Forest model, visualized using a seaborn bar plot.
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729297671032.png" height="500"
+         alt="1729297671032.png">
+</figure>
+
+**Visualizations** : Created various plots using seaborn and matplotlib to explore feature relationships and trends in the dataset.
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729297802604.png" height="500"
+         alt="1729297802604.png">
+</figure>
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729297822652.png" height="500"
+         alt="1729297822652.png">
+</figure>
+
+##### 3. **Data Preparation, Splitting, and Scaling**
+
+* **Train-Test Split** : Split the dataset into training and test sets for model training and evaluation.
+* **Standard Scaling** : Used **StandardScaler** to normalize numerical features, ensuring they are on the same scale.
+
+##### 4. **Modeling**
+
+* **Model Creation/Fit-Training** : Built multiple models, including Logistic Regression, Random Forest, and Neural Networks and fit each with Training data.  Evaluted Training Fit using accuracy score.
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729297728611.png" height="400"
+         alt="1729297728611.png">
+</figure>
+
+* **Prediction** : Made predictions on the test set and compared the model's output to the true labels.
+* **Model Evaluation** : Evaluated the model’s accuracy on the test set and compared it with training accuracy to ensure no overfitting or underfitting.
+* **K-Fold Cross-Validation** : Used cross-validation with **KerasClassifier** and Scikit-Learn's **cross_val_score** to assess model performance across multiple data subsets, ensuring robust generalization.
+
+<figure>
+    <figcaption><em></em></figcaption>
+    <img src="images/1729298177810.png" height="120"
+         alt="1729298177810.png">
+</figure>
+
+##### 5. **Optimization and Hyperparameter Tuning**
+
+* **Grid Search** : Employed **GridSearchCV** to systematically test different hyperparameter combinations and optimize model performance.
+
+##### 6. **Re-Modeling and Evaluation with Optimized Parameters**
+
+* **Cross (K-Folds) Validation** : Reassessed the performance of the optimized model using K-Folds Cross-Validation to ensure the model generalizes well to unseen data.
+
+---
+
+## Future Updates to this Model:
+
+##### Additional Success Metrics to Add to y-target Data
 
 `pfb_ref_cleaning_kitchensink.ipynb` is currently being used to pursue additional success metrics for inclusion in the modeling, including:
 
@@ -205,24 +211,26 @@ The **target variable,** a 'success' value determined by applying numerical thre
 * **`award_success`** : Award success, defined as having **3 or more total awards** (e.g., Pro Bowls, All-Pros, MVPs).
 * **`earn_success`** : Earnings success, defined as having  **career earnings > $5M.**
 
-##### B.  Additional Models, Data Techniques
+##### Additional College Statistics, College Awards, NFL Combine Statistics to X-Feature Data.
+
+##### Additional Models, Data Techniques
 
 For expansion on these studies, the following is recommended as a starting point for future models:
 
-* **Support Vector Machine**
-* **LSTM (Long Short-Term Memory)**
 * **K-Nearest Neighbors (KNN)**
+* **Support Vector Machine**
 
 Additional practices for future modeling:
 
 * **Encoding Categorical Variables:**  explore categorical variables, requiring encoding (one-hot encoding, ordinal encoding).
 
-
 ---
 
 ### Appendix A: Model Consideration and Selection
 
-The following models were considered for the modeling and prediction of this dataset:
+---
+
+The following models were **selected** for the modeling and prediction of this dataset:
 
 **Logistic Regression:**
 
@@ -234,6 +242,15 @@ The following models were considered for the modeling and prediction of this dat
 * Robust ensemble method that works well for many classification tasks. It handles overfitting better than some other models and can manage a mix of numerical and categorical data
 * **Pros:** Handles non-linear relationships.  Robust to outliers and overfitting. **Cons:** Less interpretable.  Can be slow for large datasets. **Best for:** Complex datasets with many features and interactions.
 
+**Deep Neural Network (DNN):**
+
+* A simple feedforward DNN can work well for structured data.  Ensure there is enough data to avoid overfitting, and tuning of hyperparameters is crucial.
+* **Pros:** Flexible and can model complex relationships.  Scales well with large datasets. **Cons:** Requires more data. Can overfit without proper regularization. **Best for:** General use with non-linear relationships.
+
+---
+
+The following models were **considered:**
+
 **K-Nearest Neighbors (KNN, KNeighborsClassifier):**
 
 * Model can be effective if you have enough data. It makes predictions based on the nearest neighbors in the feature space. However, it can be sensitive to the choice of `k` and might struggle with high-dimensional data
@@ -244,10 +261,9 @@ The following models were considered for the modeling and prediction of this dat
 * Can be powerful, especially with a non-linear kernel. It's effective for high-dimensional spaces but might require more tuning.
 * **Pros:** Effective in high-dimensional spaces. Works well for clear margin of separation. **Cons:** Computationally intensive.  Requires careful tuning of hyperparameters. **Best for** : Medium-sized datasets with distinct class separability.
 
-**Deep Neural Network (DNN):**
+---
 
-* A simple feedforward DNN can work well for structured data.  Ensure there is enough data to avoid overfitting, and tuning of hyperparameters is crucial.
-* **Pros:** Flexible and can model complex relationships.  Scales well with large datasets. **Cons:** Requires more data. Can overfit without proper regularization. **Best for:** General use with non-linear relationships.
+The following models were **ruled out for use on this model:**
 
 **Convolutional Neural Network (CNN)**:
 
@@ -256,7 +272,7 @@ The following models were considered for the modeling and prediction of this dat
 
 **LSTM (Long Short-Term Memory):**
 
-* Designed for sequential data, such as time series or natural language; likely not appropriate for player statistics.
+* Designed for sequential data, such as time series or natural language; likely not appropriate for statistics.
 * **Pros:** Overcomes vanishing gradient issues. Captures long-term dependencies effectively.  **Cons:** Computationally heavy **Best for:** Long-term sequential data, time-series.
 
 **Recurrent Neural Network (RNN)**
