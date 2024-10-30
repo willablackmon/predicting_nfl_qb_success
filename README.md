@@ -1,4 +1,3 @@
-
 # Predicting the Success of NFL Quarterbacks
 
 *This project aims to predict the success of NFL quarterbacks based on college performance, pre-draft rankings, and NFL statistics. The main focus is on using college football statistics (X Features) to predict NFL career success (y Target), including metrics such as Hall of Fame induction, career longevity, and key statistical achievements.*
@@ -11,23 +10,28 @@
 
 This project develops machine learning models to predict NFL quarterback success based on college performance metrics. Using data scraped from sources like DraftHistory.com, Pro Football Reference, and Sports-Reference.com, the project combines college and NFL statistics to create a comprehensive dataset. Models such as Logistic Regression, Random Forest, and a basic Neural Network were trained to predict success metrics. Feature importance, cross-validation, and hyperparameter tuning were used to optimize model performance.
 
+## Technologies Employed
 
+* **Languages/Tools:** Python, Jupyter Notebook, VS Code
+* **Libraries:** `pandas`, `seaborn`, `matplotlib`, `requests`, `BeautifulSoup`, `pickle`, `numpy`
+  * `tensorflow` (for building neural networks (`Sequential`, `Dense`, `Adam`))
+  * `scikit-learn` utilities for model training and evaluation: `train_test_split`, `KFold`, `cross_val_score`, `classification_report`, `accuracy_score`
+* **Data Sourcing/Web Scraping:** Used `requests` library to fetch web content and `BeautifulSoup` (from `bs4`) to parse HTML and extract relevant statistics.
+* **Data Preprocessing:**
+  * **Handling Missing Data** : Imputed missing values using `SimpleImputer`.
+  * **Feature Scaling** : Applied `StandardScaler` to standardize numerical features.
+  * **De-duplication** : Identified and removed duplicate records to ensure data integrity.
+* **Exploratory Data Analysis (EDA):**
+  * **Correlation Analysis** : Created a correlation matrix and heat map to identify highly correlated features.
+  * **Feature Importance** : Assessed feature importance using Random Forest Classifier and visualized results with seaborn bar graphs.
+  * **Data Visualizations** : Utilized `seaborn` and `matplotlib` to understand data trends and distributions.
+  * **Hyperparameter Tuning** : Optimized model parameters using `GridSearchCV`.
+  * **K-Fold Cross-Validation** : Employed Scikit-Learn's `cross_val_score` with `KerasClassifier` to assess model performance across multiple data subsets.
+* **Algorithms, Models, and Architecture:**
+  * **Logistic Regression** and **Random Forest Classifier** as baseline models.
+  * **Deep Learning (DNN)** : Developed using  **TensorFlow/Keras** , with model architecture including **Dense layers** and optimization using **Adam** optimizer
 
-## Core Technologies, Tools
-
-* **Languages/Tools** : Python, Jupyter Notebook
-* **Libraries** : `requests`, `BeautifulSoup`, `pandas`, `scikit-learn`, `seaborn`, `matplotlib`, `pickle`
-* **Data Handling** : Imputation with `SimpleImputer()`, correlation analysis, de-duplication, feature scaling with `StandardScaler`
-* **Machine Learning Models** : Logistic Regression, Random Forest Classifier, Deep Neural Network (Keras/TensorFlow)
-* **Techniques** : Feature importance, hyperparameter tuning with `GridSearchCV`, K-Fold cross-validation (`cross_val_score` with `KerasClassifier`)
-* **Data Export** : Cleaned and merged datasets exported as CSV and PKL files for further analysis
-
-
-
-
-
-
-## Data Sourcing Summary
+## Data Sourcing
 
 **Data Sources:**
 
@@ -47,7 +51,7 @@ The y target data focuses on NFL career statistics and achievements for quarterb
 
 The target or **y data** fields are grouped into different success metrics to help define quarterback "success" in the NFL:
 
-#### NFL Success Metrics Determination
+**NFL Success Metrics Determination**
 
 Various success metrics are calculated using NFL performance data, which helps quantify different aspects of a quarterback’s professional career success. Each metric targets a specific aspect of performance, longevity, and achievements:
 
@@ -116,8 +120,6 @@ The goal is to predict quarterback success metrics, which is a  **classification
 **Deep Learning Model** : **Basic Neural Network (DNN)** : A TensorFlow/Keras model was explored, considering the potential temporal dependencies in the data (i.e., where the state of one variable at a given time point could influence another variable at a future time point).
 
 *For more details on model considerations and characteristics, please refer to Appendix A: "Model Consideration and Selection."*
-
----
 
 #### Process
 
