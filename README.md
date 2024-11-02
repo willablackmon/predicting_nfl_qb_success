@@ -115,9 +115,8 @@ NFL success.
 
 The goal is to predict quarterback success metrics, which is a  **classification task** . The following models and techniques were employed to tackle this problem:
 
-**Baseline Models** :  **Logistic Regression, Random Forest Classifier**
-
-**Deep Learning Model** : **Basic Neural Network (DNN)** : A TensorFlow/Keras model was explored, considering the potential temporal dependencies in the data (i.e., where the state of one variable at a given time point could influence another variable at a future time point).
+* Baseline Models :  **Logistic Regression, Random Forest Classifier**
+* Deep Learning Model : **Basic Neural Network (DNN)** : A TensorFlow/Keras model was explored, considering the potential temporal dependencies in the data (i.e., where the state of one variable at a given time point could influence another variable at a future time point).
 
 *For more details on model considerations and characteristics, please refer to Appendix A: "Model Consideration and Selection."*
 
@@ -221,13 +220,11 @@ However, here are some preliminary findings:
 9. Passing yards/Game
 10. College Games played
 
-
 <figure>
     <figcaption><em></em></figcaption>
     <img src="images/1729297671032.png" height="400"
          alt="1729297671032.png">
 </figure>
-
 
 2. The **Classification Report** for the Deep Neural Network `(models_DNN.ipynb)`model shows the following:
 
@@ -283,7 +280,6 @@ The largest improvement for this model would be additional data for both the det
     <img src="images/1730328125133.png" height="400"
          alt="1730328125133.png">
 </figure>
-
 
 ---
 
